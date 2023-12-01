@@ -1,0 +1,6 @@
+{
+    "reportMissingImports": true,
+    "ignoredImports": [
+        "_sha512"
+    ]
+}

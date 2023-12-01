@@ -1,0 +1,42 @@
+import requests
+
+def get_joke(language="Any", contains="", blacklist="nsfw,racist"):
+    url = "https://jokeapi-v2.p.rapidapi.com/joke/Any"
+
+    querystring = {
+        "format": "json",
+        "contains": contains,
+        "language": language,
+        "blacklistFlags": blacklist
+    }
+
+    headers = {
+        "X-RapidAPI-Key": "b7ef9309fbmshfd344c35c31e24ap14a3f2jsn2ff5c50ab90e",
+        "X-RapidAPI-Host": "jokeapi-v2.p.rapidapi.com"
+    }
+
+    try:
+        response = requests.get(url, headers=headers, params=querystring)
+
+        if response.status_code == 200:
+            joke_data = response.json()
+            if 'setup' in joke_data and 'delivery' in joke_data:
+                return f"{joke_data['setup']} ... {joke_data['delivery']}"
+            elif 'joke' in joke_data:
+                return joke_data['joke']
+            else:
+                return {"error": "Joke format not recognized."}
+
+        else:
+            return {"error": f"Failed to fetch joke. Status code: {response.status_code}"}
+
+    except requests.RequestException as e:
+        return {"error": f"Request failed: {e}"}
+
+# Example usage of the function:
+joke = get_joke(language="Any", contains="C%23", blacklist="nsfw,racist")
+
+if isinstance(joke, dict) and "error" in joke:
+    print("Error:", joke["error"])
+else:
+    print("Here's a joke for you:\n", joke)
